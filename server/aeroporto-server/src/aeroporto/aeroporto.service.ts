@@ -14,6 +14,15 @@ export class AeroportoService {
     private readonly locationRepository: Repository<Location>,
   ) {}
 
+  // Mostrar todos os voos
+  async findAllFlights(): Promise<Flight[]> {
+    const flights = await this.flightRepository.find();
+
+    if(flights.length === 0) throw new HttpException('Voos not found!', HttpStatus.NOT_FOUND)
+
+    return flights;
+}
+
   // Buscar ou criar uma nova localização
   async findOrCreateLocation(locationDto: Partial<Location>): Promise<Location> {
     const location = await this.locationRepository.findOne({
@@ -95,4 +104,15 @@ export class AeroportoService {
 
     return this.flightRepository.save(flight);
   }
+
+  // Deletar um voo a partir do codigo de voo
+  async deleteFlightByCode(flightCode: string): Promise<void> {
+    const user = await this.flightRepository.findOne({ where: { flightCode } });
+
+    if (!user) {
+      throw new HttpException('Voo não encontrado', HttpStatus.NOT_FOUND);
+    }
+
+    await this.flightRepository.delete({ flightCode });
+}
 }
