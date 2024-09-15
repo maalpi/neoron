@@ -1,4 +1,4 @@
-import { Controller, Get, Res, Param, Post, Body, Query, Delete } from '@nestjs/common';
+import { Controller, Get, Res, Param, Post, Body, Query, Delete, Patch } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { Response } from 'express';
 import { UserDomain } from './user.domain';
@@ -38,5 +38,15 @@ export class UsersController {
             } catch (error) {
                 return response.status(error.status).json({ message: error.message });
             }
+    }
+
+    @Patch('update')
+    async updateUserByEmail(  @Res() response: Response, @Query('email') email: string, @Body() updateData: Partial<UserDomain>) {
+        try {
+            const updatedUser = await this.usersService.updateUserByEmail(email, updateData);
+            return response.status(200).json(updatedUser);
+        } catch (error) {
+            return response.status(error.status).json({ message: error.message });
+        }
     }
 }

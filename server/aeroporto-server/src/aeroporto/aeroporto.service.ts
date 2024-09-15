@@ -15,7 +15,9 @@ export class AeroportoService {
     private readonly flightRepository: Repository<Flight>,
     @InjectRepository(Location)
     private readonly locationRepository: Repository<Location>,
-  ) {}
+  ) {
+    this.flightRules = new FlightRules(this.flightRepository);
+  }
 
   // Mostrar todos os voos
   async findAllFlights(): Promise<Flight[]> {
@@ -24,6 +26,13 @@ export class AeroportoService {
     if(flights.length === 0) throw new HttpException('Voos not found!', HttpStatus.NOT_FOUND)
 
     return flights;
+  }
+
+  // Buscar um voo a partir do codigo
+  async findFlightByFlightCode(flightCode: string): Promise<Flight> {
+    const flight = await this.flightRepository.findOne({ where: { flightCode } });
+    if (!flight) throw new HttpException('Voo não encontrado!', HttpStatus.NOT_FOUND);
+    return flight;
 }
 
   // Buscar ou criar uma nova localização
@@ -73,4 +82,48 @@ export class AeroportoService {
 
     await this.flightRepository.delete({ flightCode });
 }
+
+  // Atualizar um voo a partir do seu codigo
+  async updateFlightByCode(flightCode: string, updateData: Partial<CreateFlightDto>): Promise<Flight> {
+    // Encontra o voo existente pelo flightCode
+    try {
+    const flight = await this.findFlightByFlightCode(flightCode);
+
+    if (!flight) {
+      throw new HttpException('Voo não encontrado', HttpStatus.NOT_FOUND);
+    }
+
+    if (updateData.flightCode && updateData.flightCode !== flight.flightCode) {
+      await this.flightRules.checkExistingFlightCode(updateData.flightCode);
+    }
+
+    if ((updateData.destination && updateData.destination !== flight.destination) || (updateData.date && updateData.date !== flight.date)) {
+      await this.flightRules.checkSameDayFlight(updateData.destination, updateData.date);
+    }
+
+    // Verifica se a data está sendo alterada para aplicar a regra de proximidade de tempo
+    if (updateData.date && updateData.date !== flight.date) {
+      await this.flightRules.checkTimeProximity(updateData.date);
+    }
+
+    // Verifica e atualiza a origem e destino, criando-as se necessário
+    
+    const origin = await this.findOrCreateLocation(updateData.origin);
+    flight.origin = origin;
+    
+    const destination = await this.findOrCreateLocation(updateData.destination);
+    flight.destination = destination;
+
+    // Atualiza os outros campos do voo
+    Object.assign(flight, updateData);
+
+    // Salva as atualizações no banco de dados
+    return await this.flightRepository.save(flight);
+  } catch (error) {
+    // Captura de erro mais detalhada
+    console.error('Erro ao atualizar voo:', error);
+    throw new HttpException('Erro ao atualizar voo: ' + error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+  }
+
 }

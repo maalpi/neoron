@@ -41,4 +41,19 @@ export class UsersService {
     
         await this.usersRepository.delete({ email });
     }
+
+    // Método para atualizar o usuário por email
+    async updateUserByEmail(email: string, updateData: Partial<UserDomain>): Promise<Users> {
+        const user = await this.findUserByEmail(email);
+
+        if (!user) {
+        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+        }
+
+        // Atualiza os campos do usuário com os dados fornecidos
+        Object.assign(user, updateData);
+
+        // Salva as atualizações no banco de dados
+        return await this.usersRepository.save(user);
+    }
 }

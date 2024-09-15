@@ -6,7 +6,6 @@ import { Location } from 'src/local/local.entity';
 export class FlightRules {
   constructor(private readonly flightRepository: Repository<Flight>) {}
 
-
     // Verificar se existe um voo com o mesmo código
     async checkExistingFlightCode(flightCode: string): Promise<void> {
         const existingFlight = await this.flightRepository.findOne({ where: { flightCode } });
