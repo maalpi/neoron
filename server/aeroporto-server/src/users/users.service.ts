@@ -28,6 +28,12 @@ export class UsersService {
     }
     
     async createUser(user: UserDomain): Promise<UserDomain> {
+        const existingUser = await this.usersRepository.findOne({ where: { email: user.email } });
+
+        if (existingUser) {
+            throw new HttpException('Email já cadastrado', HttpStatus.CONFLICT); // Status 409
+        }
+
         const createdUser = await this.usersRepository.save(user);
         return createdUser;
     }
