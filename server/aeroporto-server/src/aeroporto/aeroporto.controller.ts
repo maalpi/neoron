@@ -46,12 +46,20 @@ export class AeroportoController {
   }
 
   @Patch('update')
-  async updateFlight(  @Res() response: Response, @Query('flightCode') flightCode: string, @Body() updateData: Partial<CreateFlightDto>) {
+  async updateFlight(
+    @Res() response: Response,
+    @Query('flightCode') flightCode: string,
+    @Body() updateData: Partial<CreateFlightDto> // Aceitar dados parciais
+  ) {
     try {
-        const updatedFlight = await this.aeroportoService.updateFlightByCode(flightCode, updateData);
-        return response.status(200).json(updatedFlight);
+      const updatedFlight = await this.aeroportoService.updateFlight(flightCode, updateData);
+  
+      return response.status(200).json(updatedFlight);
     } catch (error) {
-        return response.status(error.status).json({ message: error.message });
+      const status = error.status || 500;
+      const message = error.message || 'An error occurred while updating the flight';
+  
+      return response.status(status).json({ message });
     }
-}
+  }
 }

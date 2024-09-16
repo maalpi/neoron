@@ -1,4 +1,4 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, Repository } from 'typeorm';
 import { Flight } from './aeroporto.entity';
@@ -84,46 +84,72 @@ export class AeroportoService {
 }
 
   // Atualizar um voo a partir do seu codigo
-  async updateFlightByCode(flightCode: string, updateData: Partial<CreateFlightDto>): Promise<Flight> {
-    // Encontra o voo existente pelo flightCode
+  async updateFlight(flightCode: string, updateData: Partial<CreateFlightDto>): Promise<Flight> {
+    // Backup
+    const flight = await this.flightRepository.findOne({
+      where: { flightCode },
+      relations: ['origin', 'destination'], 
+    });
+
+    // Copia
+    const backupFlight = { ...flight };
+
+    await this.deleteFlightByCode(flightCode);
+    
     try {
-    const flight = await this.findFlightByFlightCode(flightCode);
+      if (updateData.flightCode && updateData.flightCode !== flight.flightCode) {
+        await this.flightRules.checkExistingFlightCode(updateData.flightCode);
+      }
 
-    if (!flight) {
-      throw new HttpException('Voo não encontrado', HttpStatus.NOT_FOUND);
-    }
-
-    if (updateData.flightCode && updateData.flightCode !== flight.flightCode) {
-      await this.flightRules.checkExistingFlightCode(updateData.flightCode);
-    }
-
-    if ((updateData.destination && updateData.destination !== flight.destination) || (updateData.date && updateData.date !== flight.date)) {
-      await this.flightRules.checkSameDayFlight(updateData.destination, updateData.date);
-    }
-
-    // Verifica se a data está sendo alterada para aplicar a regra de proximidade de tempo
-    if (updateData.date && updateData.date !== flight.date) {
-      await this.flightRules.checkTimeProximity(updateData.date);
-    }
-
-    // Verifica e atualiza a origem e destino, criando-as se necessário
+      if (updateData.date && updateData.date !== flight.date) {
+        await this.flightRules.checkTimeProximity(updateData.date);
+      }
     
-    const origin = await this.findOrCreateLocation(updateData.origin);
-    flight.origin = origin;
+      // Agora verifica se o destino foi alterado
+      if (updateData.destination && updateData.destination.id !== flight.destination.id) {
+        await this.flightRules.checkSameDayFlight(updateData.destination, updateData.date || flight.date);
+      }
     
-    const destination = await this.findOrCreateLocation(updateData.destination);
-    flight.destination = destination;
+      if (!flight) {
+        throw new NotFoundException('Flight not found');
+      }
+    
 
-    // Atualiza os outros campos do voo
-    Object.assign(flight, updateData);
-
-    // Salva as atualizações no banco de dados
-    return await this.flightRepository.save(flight);
+      if (updateData.origin) {
+        flight.origin = await this.locationRepository.save({
+          ...flight.origin, 
+          ...updateData.origin, 
+        });
+      }
+    
+      // Atualiza o destino, se fornecido
+      if (updateData.destination) {
+        flight.destination = await this.locationRepository.save({
+          ...flight.destination, // Mantém os dados antigos
+          ...updateData.destination, // Sobrescreve com os novos
+        });
+      }
+    
+      // Atualiza outros campos do voo, se fornecidos
+      flight.flightCode = updateData.flightCode;
+      flight.date = updateData.date;
+      
+    
+      // Salva o voo atualizado
+      await this.flightRepository.save(flight);
+    
+      // Retorna o voo atualizado com as relações
+      return await this.flightRepository.findOne({
+        where: { flightCode },
+        relations: ['origin', 'destination'],
+      });
   } catch (error) {
-    // Captura de erro mais detalhada
-    console.error('Erro ao atualizar voo:', error);
-    throw new HttpException('Erro ao atualizar voo: ' + error.message, HttpStatus.INTERNAL_SERVER_ERROR);
-  }
+      // 5. Restaurar o Voo a partir do Backup em caso de erro
+      await this.flightRepository.save(backupFlight);
+
+      // Lançar o erro novamente após restaurar o voo
+      throw error;
+    }
   }
 
 }
