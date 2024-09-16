@@ -1,6 +1,6 @@
 'use client'
 import { useQuery } from "@tanstack/react-query";
-import axios, { AxiosPromise, AxiosResponse } from 'axios';
+import axios, { AxiosPromise } from 'axios';
 import { AeroportoData } from "@/interfaces/aeroporto-data";
 
 const fetchData = async (): AxiosPromise<AeroportoData[]> => {

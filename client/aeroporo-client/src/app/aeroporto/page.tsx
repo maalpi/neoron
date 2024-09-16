@@ -6,13 +6,14 @@ import TableAeroporto from '@/components/table/Tabela';
 
 export default async function Home() {
 
-  // Obtém a sessão atual
-//   const session = await getServerSession();
+//   Obtém a sessão atual
+  const session = await getServerSession();
 
-  // Verifica se a sessão está autorizada
-//   if(!session) {
-//     redirect("/");
-//   };
+//   Verifica se a sessão está autorizada
+  if(!session) {
+    redirect("/");
+    // console.log(session)
+  };
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-zinc-900 z-20">
