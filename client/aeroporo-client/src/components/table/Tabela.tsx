@@ -21,7 +21,8 @@ import {
   } from "@/components/ui/pagination"
 
 import { useAeroportoData } from '@/hooks/useAeroportoData';
-  
+import Describe from '../dialog/Describe'; 
+
 export default function TableAeroporto() {
     const rowsPerPage = 5;
     const [startIndex, setStartIndex] = useState(0);
@@ -31,9 +32,9 @@ export default function TableAeroporto() {
     const end = Math.min(startIndex + rowsPerPage,  data?.data?.length);
     
     return (
-      <div className='flex justify-center top-10 items-center flex-col min-h-screen fixed w-full px-4'>
+      <div className='flex justify-center top-10 items-center flex-col   px-4'>
         <h1 className='text-white'>Table</h1>
-        <div className="overflow-x-clip overflow-y-auto max-w-full max-h-[500px] bg-gray-200 shadow-md rounded-lg">
+        <div className="overflow-x-clip overflow-y-auto  bg-gray-200 shadow-md rounded-lg">
           {isLoading ? (
             <p>Carregando...</p>
           ) : (
@@ -49,7 +50,7 @@ export default function TableAeroporto() {
                         <TableHead className="w-[100px] hidden lg:table-cell text-center">Horario</TableHead>
                         <TableHead className="w-[100px] text-center">Saída</TableHead>
                         <TableHead className="w-[100px] hidden lg:table-cell text-center">Destino</TableHead>
-                        <TableHead className="w-[100px] hidden lg:table-cell text-center">Ação</TableHead>
+                        <TableHead className="w-[100px] hidden lg:table-cell text-center">Detalhes</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -67,6 +68,9 @@ export default function TableAeroporto() {
                           </TableCell>
                           <TableCell className="text-zinc-900 hidden lg:table-cell text-center">
                           {aeroporto.destination.city}
+                          </TableCell>
+                          <TableCell className="text-zinc-900 hidden lg:table-cell text-center">
+                            <Describe data={aeroporto}/>
                           </TableCell>
                         </TableRow>
                       ))}

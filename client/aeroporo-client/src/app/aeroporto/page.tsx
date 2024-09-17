@@ -3,6 +3,7 @@ import React from 'react';
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import TableAeroporto from '@/components/table/Tabela';
+import  Create  from '@/components/dialog/Create';
 
 export default async function Home() {
 
@@ -16,8 +17,12 @@ export default async function Home() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-zinc-900 z-20">
+    <>
+    <main className="flex min-h-screen items-center justify-center flex-col bg-slate-950">
+        <Create/>
         <TableAeroporto/>
     </main>
+    
+  </>
   );
 }
