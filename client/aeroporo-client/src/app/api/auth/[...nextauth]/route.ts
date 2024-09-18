@@ -12,7 +12,7 @@ const handler = NextAuth({
       async authorize(credentials) {
         try {
           // Faz a requisição para a sua API que verifica o email
-          const res = await fetch(`http://localhost:3001/users/search/email?email=${credentials?.email}`);
+          const res = await fetch(`https://nest-neoron-deploy.onrender.com/users/search/email?email=${credentials?.email}`);
           const user = await res.json();
 
           // Se o usuário foi encontrado e a senha está correta
@@ -40,7 +40,8 @@ const handler = NextAuth({
       return token;
     },
     async session({ session, token }) {
-      session.user.id = token.id;
+      // @ts-ignore
+      session.user!.id = token.id;
       return session;
     },
   },

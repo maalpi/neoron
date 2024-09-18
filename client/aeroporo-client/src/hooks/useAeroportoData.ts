@@ -3,8 +3,9 @@ import { useQuery } from "@tanstack/react-query";
 import axios, { AxiosPromise } from 'axios';
 import { AeroportoData } from "@/interfaces/aeroporto-data";
 
+// @ts-ignore
 const fetchData = async (): AxiosPromise<AeroportoData[]> => {
-    const response = await axios.get<AeroportoData[]>('http://localhost:3001/aeroporto');
+    const response = await axios.get<AeroportoData[]>('https://nest-neoron-deploy.onrender.com/aeroporto');
     return response;
   }
   

@@ -7,7 +7,7 @@ export const useCreateFlight = () => {
 
   const handleSubmit = async (flightData: AeroportoData) => {
     try {
-      const response = await axios.post('http://localhost:3001/aeroporto', flightData);
+      const response = await axios.post('https://nest-neoron-deploy.onrender.com/aeroporto', flightData);
       console.log('Voo criado com sucesso:', response.data);
     } catch (error) {
       if (axios.isAxiosError(error)) {

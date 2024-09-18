@@ -6,7 +6,6 @@ export const usePatchAeroporto = () => {
   const handleUpdate = async (event: React.FormEvent, data: any, date: string, time: string, setLoading: React.Dispatch<React.SetStateAction<boolean>>) => {
     event.preventDefault();
     setLoading(true);
-
     const form = event.currentTarget as HTMLFormElement;
     const formData = new FormData(form);
 
@@ -31,7 +30,7 @@ export const usePatchAeroporto = () => {
     };
 
     try {
-      const response = await fetch(`http://localhost:3001/aeroporto/update?flightCode=${data.flightCode}`, {
+      const response = await fetch(`https://nest-neoron-deploy.onrender.com/aeroporto/update?flightCode=${data.flightCode}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

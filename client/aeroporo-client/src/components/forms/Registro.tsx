@@ -38,7 +38,7 @@ async function registerUser(e: React.FormEvent<HTMLFormElement>) {
 
     try {
       // Faz a requisição para registrar o usuário
-      const response = await fetch('http://localhost:3001/users', {
+      const response = await fetch('https://nest-neoron-deploy.onrender.com/users', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
