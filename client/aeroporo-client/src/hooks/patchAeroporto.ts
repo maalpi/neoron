@@ -1,9 +1,31 @@
 import { useToast } from "@/hooks/use-toast";
 
+interface FlightData {
+  flightCode: string;
+  origin: {
+    postalCode: string;
+    country: string;
+    city: string;
+    state: string;
+  };
+  destination: {
+    postalCode: string;
+    country: string;
+    city: string;
+    state: string;
+  };
+}
+
 export const usePatchAeroporto = () => {
   const { toast } = useToast();
 
-  const handleUpdate = async (event: React.FormEvent, data: any, date: string, time: string, setLoading: React.Dispatch<React.SetStateAction<boolean>>) => {
+  const handleUpdate = async (
+    event: React.FormEvent,
+    data: FlightData,
+    date: string,
+    time: string,
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>
+  ) => {
     event.preventDefault();
     setLoading(true);
     const form = event.currentTarget as HTMLFormElement;

@@ -1,13 +1,18 @@
 'use client'
 import { useQuery } from "@tanstack/react-query";
-import axios, { AxiosPromise } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { AeroportoData } from "@/interfaces/aeroporto-data";
 
-// @ts-ignore
-const fetchData = async (): AxiosPromise<AeroportoData[]> => {
-    const response = await axios.get<AeroportoData[]>('http://localhost:3001/aeroporto');
-    return response;
+const fetchData = async (): Promise<AeroportoData[]> => {
+  try {
+    const response: AxiosResponse<AeroportoData[]> = await axios.get('http://localhost:3001/aeroporto');
+    return response.data; // Retorne apenas os dados
+  } catch (error) {
+    // Trate o erro conforme necessário
+    console.error('Erro ao buscar dados', error);
+    throw error; // Re-throw the error to be handled by the caller
   }
+};
   
   export function useAeroportoData() {
     console.log('query page');
