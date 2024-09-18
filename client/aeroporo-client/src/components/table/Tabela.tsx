@@ -43,7 +43,7 @@ export default function TableAeroporto() {
               {data && data.length > 0 ? (
                 
                   <Table className="lg:min-w-[600px] max-w-[300px] lg:table-cell z-40">
-                    <TableCaption>Lista de Pokémons Favoritos</TableCaption>
+                    <TableCaption>Lista de voos</TableCaption>
                     <TableHeader>
                       <TableRow>
                         <TableHead className="w-[150px] text-center">Código Voo</TableHead>
