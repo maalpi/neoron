@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 
 export default async function Perfil() {
     const session = await getServerSession();
-
+    const email = session?.user?.email || '';
     if(!session) {
         redirect("/");
         // console.log(session)
@@ -14,7 +14,7 @@ export default async function Perfil() {
     return (
       <main className="flex min-h-screen items-center justify-center bg-slate-950	">
         <Navigation />
-        <PerfilForm email={session!.user?.email}/>
+        <PerfilForm email={email}/>
       </main>
     );
   }
