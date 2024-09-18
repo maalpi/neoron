@@ -21,6 +21,7 @@ import {
   } from "@/components/ui/pagination"
 
 import { useAeroportoData } from '@/hooks/useAeroportoData';
+
 import Describe from '../dialog/Describe'; 
 
 export default function TableAeroporto() {
@@ -29,7 +30,7 @@ export default function TableAeroporto() {
     const [endIndex, setEndIndex] = useState(rowsPerPage);
     const { data, isLoading } = useAeroportoData();
 
-    const end = Math.min(startIndex + rowsPerPage,  data?.data?.length ?? 0);
+    const end = Math.min(startIndex + rowsPerPage,  data?.length ?? 0);
     
     return (
       <div className='flex justify-center top-10 items-center flex-col   px-4'>
@@ -39,7 +40,7 @@ export default function TableAeroporto() {
             <p>Carregando...</p>
           ) : (
             <>
-              {data?.data && data.data.length > 0 ? (
+              {data && data.length > 0 ? (
                 
                   <Table className="min-w-[600px] z-40">
                     <TableCaption>Lista de Pokémons Favoritos</TableCaption>
@@ -54,7 +55,7 @@ export default function TableAeroporto() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {data.data.slice(startIndex, endIndex).map((aeroporto) => (
+                      {data.slice(startIndex, endIndex).map((aeroporto) => (
                         <TableRow key={aeroporto.flightCode}>
                           <TableCell className='text-zinc-900 text-center'>
                               {aeroporto.flightCode}
@@ -78,7 +79,7 @@ export default function TableAeroporto() {
                     <TableFooter>
                       <TableRow>
                         <TableCell className='text-zinc-900' colSpan={4}>Total de Pokémons Favoritos</TableCell>
-                        <TableCell className="text-right text-zinc-900">{data?.data?.length}</TableCell>
+                        <TableCell className="text-right text-zinc-900">{data?.length}</TableCell>
                       </TableRow>
                     </TableFooter>
                   </Table>
@@ -106,7 +107,7 @@ export default function TableAeroporto() {
           <PaginationItem>
             <PaginationNext
               className={
-                end >= (data?.data?.length ?? 0)  ? "pointer-events-none opacity-50" : 'cursor-pointer'
+                end >= (data?.length ?? 0)  ? "pointer-events-none opacity-50" : 'cursor-pointer'
               }
               onClick={() => {
                 setStartIndex(startIndex + rowsPerPage); //10
