@@ -25,7 +25,9 @@ import { useRouter } from 'next/navigation';
 export default function Login() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const { toast } = useToast()
+  const { toast } = useToast();
+
+  console.log(error);
 
   useEffect(() => {
     // Verificando os  parâmetros na URL para identificar possíveis erros de login
