@@ -11,3 +11,5 @@ Client -> Front-End ( Hospedado no Netlify )
 <br/>
 Server -> Back-End ( Hospedado no Render )
 
+## OBSERVAÇÕES
+Para dar erro de 'DESTINO' igual no mesmo dia, todo as informações de destino deve ser igual. Optei por fazer assim porque existe diversas cidades no brasil com o mesmo nome, até cidades do exterior possuem o mesmo nome.
