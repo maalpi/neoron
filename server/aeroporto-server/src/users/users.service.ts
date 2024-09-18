@@ -50,16 +50,25 @@ export class UsersService {
 
     // Método para atualizar o usuário por email
     async updateUserByEmail(email: string, updateData: Partial<UserDomain>): Promise<Users> {
-        const user = await this.findUserByEmail(email);
-
+        // Encontra o usuário atual
+        const user = await this.usersRepository.findOne({ where: { email } });
         if (!user) {
-        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+            throw new HttpException('User not found', HttpStatus.NOT_FOUND);
         }
 
-        // Atualiza os campos do usuário com os dados fornecidos
-        Object.assign(user, updateData);
+        // Cria uma cópia de backup do usuário
+        const backupUser = { ...user };
 
-        // Salva as atualizações no banco de dados
-        return await this.usersRepository.save(user);
+        try {
+            // Atualiza os campos do usuário com os dados fornecidos
+            Object.assign(user, updateData);
+
+            // Salva as atualizações no banco de dados
+            return await this.usersRepository.save(user);
+        } catch (error) {
+            // Em caso de erro, restaura o backup
+            await this.usersRepository.save(backupUser);
+            throw new HttpException('Failed to update user, restored from backup', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

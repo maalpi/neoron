@@ -13,7 +13,7 @@ export const useDeleteAeroporto = () => {
 
     setLoading(true);
     try {
-      const response = await fetch(`https://nest-neoron-deploy.onrender.com/aeroporto/delete?flightCode=${data.flightCode}`, {
+      const response = await fetch(`http://localhost:3001/aeroporto/delete?flightCode=${data.flightCode}`, {
         method: 'DELETE',
       });
 
