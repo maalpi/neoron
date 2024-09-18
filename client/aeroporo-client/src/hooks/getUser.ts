@@ -18,7 +18,7 @@ export function useUserData(email: string) {
     const fetchUserData = async () => {
       if (email) {
         try {
-          const response = await fetch(`http://localhost:3001/users/search/email?email=${email}`);
+          const response = await fetch(`https://nest-neoron-deploy.onrender.com/users/search/email?email=${email}`);
           if (!response.ok) {
             throw new Error('Failed to fetch user data');
           }

@@ -33,8 +33,8 @@ export default function TableAeroporto() {
     const end = Math.min(startIndex + rowsPerPage,  data?.length ?? 0);
     
     return (
-      <div className='flex justify-center top-10 items-center flex-col   px-4'>
-        <h1 className='text-white'>Table</h1>
+      <div className='flex justify-center top-10 items-center flex-col  mt-5 px-4'>
+
         <div className="overflow-x-clip overflow-y-auto  bg-gray-200 shadow-md rounded-lg">
           {isLoading ? (
             <p>Carregando...</p>
@@ -42,16 +42,16 @@ export default function TableAeroporto() {
             <>
               {data && data.length > 0 ? (
                 
-                  <Table className="min-w-[600px] z-40">
+                  <Table className="lg:min-w-[600px] max-w-[300px] lg:table-cell z-40">
                     <TableCaption>Lista de Pokémons Favoritos</TableCaption>
                     <TableHeader>
                       <TableRow>
                         <TableHead className="w-[150px] text-center">Código Voo</TableHead>
                         <TableHead className="w-[140px] text-center">Data</TableHead>
                         <TableHead className="w-[100px] hidden lg:table-cell text-center">Horario</TableHead>
-                        <TableHead className="w-[100px] text-center">Saída</TableHead>
+                        <TableHead className="w-[100px] hidden lg:table-cell text-center">Saída</TableHead>
                         <TableHead className="w-[100px] hidden lg:table-cell text-center">Destino</TableHead>
-                        <TableHead className="w-[100px] hidden lg:table-cell text-center">Detalhes</TableHead>
+                        <TableHead className="w-[100px]  text-center">Detalhes</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -64,13 +64,13 @@ export default function TableAeroporto() {
                           <TableCell className="hidden lg:table-cell text-zinc-900 text-center">
                               {aeroporto.date .match(/\d\d:\d\d/)}
                           </TableCell>
-                          <TableCell className='text-zinc-900 text-center'>
+                          <TableCell className='text-zinc-900 hidden lg:table-cell text-center'>
                           {aeroporto.origin.city}
                           </TableCell>
                           <TableCell className="text-zinc-900 hidden lg:table-cell text-center">
                           {aeroporto.destination.city}
                           </TableCell>
-                          <TableCell className="text-zinc-900 hidden lg:table-cell text-center">
+                          <TableCell className="text-zinc-900 text-center">
                             <Describe data={aeroporto}/>
                           </TableCell>
                         </TableRow>
@@ -78,7 +78,7 @@ export default function TableAeroporto() {
                     </TableBody>
                     <TableFooter>
                       <TableRow>
-                        <TableCell className='text-zinc-900' colSpan={4}>Total de Pokémons Favoritos</TableCell>
+                        <TableCell className='text-zinc-900' colSpan={5}>Total de voos disponiveis</TableCell>
                         <TableCell className="text-right text-zinc-900">{data?.length}</TableCell>
                       </TableRow>
                     </TableFooter>

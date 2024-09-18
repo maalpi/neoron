@@ -14,7 +14,7 @@ export function useUpdateAccount() {
     }
 
     try {
-      const response = await fetch(`http://localhost:3001/users/update?email=${email}`, {
+      const response = await fetch(`https://nest-neoron-deploy.onrender.com/users/update?email=${email}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

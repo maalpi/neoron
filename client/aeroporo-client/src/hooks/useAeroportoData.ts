@@ -5,7 +5,7 @@ import { AeroportoData } from "@/interfaces/aeroporto-data";
 
 const fetchData = async (): Promise<AeroportoData[]> => {
   try {
-    const response: AxiosResponse<AeroportoData[]> = await axios.get('http://localhost:3001/aeroporto');
+    const response: AxiosResponse<AeroportoData[]> = await axios.get('https://nest-neoron-deploy.onrender.com/aeroporto');
     return response.data; // Retorne apenas os dados
   } catch (error) {
     // Trate o erro conforme necessário

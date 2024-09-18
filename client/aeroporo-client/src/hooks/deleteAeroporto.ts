@@ -4,6 +4,7 @@ import { useToast } from "@/hooks/use-toast";
 export const useDeleteAeroporto = () => {
   const { toast } = useToast();
 
+
   const handleDelete = async (data: AeroportoData, setLoading: (loading: boolean) => void) => {
     const confirmed = window.confirm('Tem certeza de que deseja excluir este voo?');
 
@@ -13,7 +14,7 @@ export const useDeleteAeroporto = () => {
 
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:3001/aeroporto/delete?flightCode=${data.flightCode}`, {
+      const response = await fetch(`https://nest-neoron-deploy.onrender.com/aeroporto/delete?flightCode=${data.flightCode}`, {
         method: 'DELETE',
       });
 
@@ -31,7 +32,9 @@ export const useDeleteAeroporto = () => {
         title: "SUCESSO ao destruir elemento",
         description: "Voo excluído com sucesso.",
       });
-      // Aqui você pode adicionar qualquer lógica para redirecionar ou atualizar a página
+
+      // Redireciona para a página atual para forçar a atualização
+      window.location.reload();
 
     } catch (error) {
       console.error('Erro ao excluir voo:', error);
