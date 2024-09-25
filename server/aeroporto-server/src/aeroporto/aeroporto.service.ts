@@ -64,7 +64,7 @@ export class AeroportoService {
 
     const flight = this.flightRepository.create({
       flightCode: flightDto.flightCode,
-      date: flightDto.date, // Corrigir para garantir que a data seja a correta
+      date: flightDto.date, 
       origin,
       destination,
     });

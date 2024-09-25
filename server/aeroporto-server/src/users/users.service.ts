@@ -12,6 +12,7 @@ export class UsersService {
         private readonly usersRepository: Repository<Users>
     ) { }
 
+    // Buscar todos os usuarios
     async findAllUsers(): Promise<Users[]> {
         const users = await this.usersRepository.find();
 
@@ -27,6 +28,7 @@ export class UsersService {
         return user;
     }
     
+    // Criar um usuario
     async createUser(user: UserDomain): Promise<UserDomain> {
         const existingUser = await this.usersRepository.findOne({ where: { email: user.email } });
 
@@ -38,6 +40,7 @@ export class UsersService {
         return createdUser;
     }
 
+    // Apagar um usuario a partir de seu email
     async deleteUserByEmail(email: string): Promise<void> {
         const user = await this.usersRepository.findOne({ where: { email } });
     

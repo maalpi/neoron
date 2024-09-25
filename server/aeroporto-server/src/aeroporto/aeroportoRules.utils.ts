@@ -43,7 +43,7 @@ export class FlightRules {
         const endOfDay = new Date(flightDateOBJ.setHours(23, 59, 59));
 
         const sameDayFlight = await this.flightRepository.findOne({
-            where: { destination, date: Between(startOfDay, endOfDay) },
+            where: { destination: {postalCode: destination.postalCode}, date: Between(startOfDay, endOfDay) },
         });
 
         if (sameDayFlight) {
